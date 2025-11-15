@@ -1,6 +1,6 @@
-# CompliOps - Complete Documentation Index
+# CompliSense - Complete Documentation Index
 
-Welcome to CompliOps! This guide will help you understand every aspect of the application.
+Welcome to CompliSense! This guide will help you understand every aspect of the application.
 
 ## 📚 Documentation Files Overview
 
