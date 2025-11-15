@@ -1,403 +1,471 @@
-# CompliSense - Complete Documentation Index
+# CompliOps - Compliance Automation Platform
 
-Welcome to CompliSense! This guide will help you understand every aspect of the application.
+> **AI-powered compliance monitoring, automated reporting, and intelligent Q&A for enterprises**
 
-## 📚 Documentation Files Overview
-
-### 1. **README.md** - Quick Start
-- Installation instructions
-- How to run the server
-- Basic API examples
-- Health check verification
-
-### 2. **BACKEND_STRUCTURE.md** - Code Organization
-- Project directory structure
-- Module responsibilities
-- File descriptions
-- Development guidelines
-
-### 3. **APP_FLOW.md** - User Journeys & Sign-Up
-**Read this to understand:**
-- ✅ Complete user onboarding process
-- ✅ Sign-up and login flow
-- ✅ All three main dashboard sections
-- ✅ Step-by-step user journeys
-- ✅ Data collection process
-- ✅ Frontend & backend state management
-- ✅ Complete session timeline
-
-### 4. **DOCUMENTATION.md** - Complete Technical Guide
-**Read this for:**
-- 📊 System architecture overview
-- 🔄 Three core features (Watchtower, Executor, Reliable Chat)
-- 📝 Detailed data flow & processing
-- 🔌 Full API documentation with examples
-- 🎯 Mermaid workflow diagrams
-- 💾 Database schema
-- ❌ Error handling & fallbacks
-
-### 5. **MAIN.py** - Application Entry Point
-- FastAPI initialization
-- Route registration
-- Lifecycle management
-- Server startup
+CompliOps is a full-stack compliance automation platform combining **real-time monitoring**, **AI-driven report generation**, and **intelligent compliance guidance** to help organizations stay compliant with minimal manual effort.
 
 ---
 
-## 🗺️ Quick Navigation
+## ✨ Key Features
 
-### I want to understand...
+### 🔔 **Watchtower** - Automated Compliance Monitoring
+Real-time detection and alerting for regulatory changes
+- Continuous monitoring on 2-minute intervals
+- Automatic alert generation for compliance issues
+- Categorized alerts (SOC 2, GDPR, HIPAA, ISO 27001)
+- Alert history and tracking
 
-**The User Experience**
-→ Read: `APP_FLOW.md` - User Onboarding & Sign-Up sections
+### 📊 **Executor** - AI-Powered Report Generation
+Generate compliance reports automatically using AI agents
+- Multi-agent crew (ComplianceAnalyst, DataFetcher, ReportWriter)
+- Structured report generation with findings and recommendations
+- Background processing with real-time status updates
+- Ready-to-export compliance documentation
 
-**How to Run the App**
-→ Read: `README.md` or `BACKEND_STRUCTURE.md` - Running section
-
-**The Complete System**
-→ Read: `DOCUMENTATION.md` - System Architecture & Workflows
-
-**Code Organization**
-→ Read: `BACKEND_STRUCTURE.md` - Project Structure
-
-**API Endpoints**
-→ Read: `DOCUMENTATION.md` - API Documentation section
-
-**Data Processing**
-→ Read: `DOCUMENTATION.md` - Data Flow section or `APP_FLOW.md` - Data Collection
-
-**Workflows & Diagrams**
-→ Read: `DOCUMENTATION.md` - Workflow Diagrams (with Mermaid)
-
-**Error Handling**
-→ Read: `DOCUMENTATION.md` - Error Handling & Fallbacks
+### 💬 **Reliable Chat** - Compliance Q&A
+RAG-based AI chatbot for instant compliance guidance
+- Knowledge base search with context
+- Gemini-powered responses
+- Source attribution
+- Mock vector store with 4 compliance topics
 
 ---
 
-## 🎯 Three Core Features at a Glance
+## 🏗️ Architecture Overview
 
-### 1️⃣ WATCHTOWER - Automated Change Detection
 ```
-What: Monitors for compliance changes
-When: Every 2 minutes automatically
-How: Simulates web scraping + Gemini analysis
-Output: ComplianceAlert records
-Data: Stored in SQLite, displayed in dashboard
-```
-
-### 2️⃣ EXECUTOR - AI Report Generation
-```
-What: Generates detailed compliance reports
-When: User clicks "Generate Report" on an alert
-How: crew.ai orchestrates 3 AI agents
-Output: Markdown formatted report
-Data: Stored in database, retrievable via API
-```
-
-### 3️⃣ RELIABLE CHAT - RAG Q&A
-```
-What: Answers compliance questions
-When: User types and sends a question
-How: Vector store search + Gemini RAG
-Output: Answer with source attribution
-Data: Not persisted (real-time)
+┌─────────────────────────────────────────────────────────────┐
+│                    Frontend (Next.js)                       │
+│  Dashboard • Alerts • Reports • Chat Interface              │
+└────────────────────┬────────────────────────────────────────┘
+                     │ REST API (JSON)
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Backend (FastAPI)                        │
+├─────────────────────────────────────────────────────────────┤
+│ Routes              │ Services           │ Agents            │
+│ ├─ auth.py         │ ├─ watchtower.py  │ └─ executor.py    │
+│ ├─ alerts.py       │ └─ scheduler       │                   │
+│ ├─ reports.py      │                    │                   │
+│ └─ chat.py         │                    │                   │
+│                    │                    │                   │
+│ Models             │ External Services                      │
+│ ├─ database.py    │ ├─ Google Gemini (LLM)                 │
+│ └─ schemas.py     │ └─ crew.ai agents                      │
+└─────────────────────────────────────────────────────────────┘
+                     │
+                     ▼
+         ┌──────────────────────┐
+         │  SQLite Database     │
+         │  - Users             │
+         │  - Alerts            │
+         │  - Reports           │
+         └──────────────────────┘
 ```
 
 ---
 
-## 📊 Architecture Overview
+## 📂 Project Structure
 
 ```
-┌─────────────────┐
-│   Frontend      │ (Next.js)
-│   (Dashboard)   │
-└────────┬────────┘
-         │ HTTP/REST
-         ▼
-┌──────────────────────────────┐
-│  FastAPI Backend             │
-│  ──────────────────────────  │
-│  • Watchtower (Alerts)       │
-│  • Executor (Reports)        │
-│  • Reliable Chat (Q&A)       │
-│  • Auth (Dummy)              │
-└────────┬─────────────────────┘
-         │
-         ├─────────────────┬──────────────┬──────────────┐
-         ▼                 ▼              ▼              ▼
-    ┌────────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
-    │  SQLite    │  │  Gemini  │  │ Vector   │  │ Schedule │
-    │  Database  │  │   API    │  │  Store   │  │   Task   │
-    │            │  │          │  │          │  │          │
-    │ • Users    │  │ • LLM    │  │ • BNPL   │  │ • 2min   │
-    │ • Alerts   │  │ • Analysis│ │ • KYC    │  │ • Check  │
-    │ • Reports  │  │          │  │ • AML    │  │          │
-    └────────────┘  └──────────┘  └──────────┘  └──────────┘
+btf-hackathon-submission/
+├── 📁 app/                          # Backend application
+│   ├── 📄 __init__.py
+│   ├── 📄 config.py                 # Configuration & LLM setup
+│   ├── 📁 models/
+│   │   ├── database.py              # SQLAlchemy ORM models
+│   │   └── schemas.py               # Pydantic validation
+│   ├── 📁 services/
+│   │   └── watchtower.py            # Scheduler & monitoring
+│   ├── 📁 agents/
+│   │   └── executor.py              # crew.ai agent definitions
+│   └── 📁 routes/
+│       ├── auth.py                  # Login endpoint
+│       ├── alerts.py                # Alert endpoints
+│       ├── reports.py               # Report generation
+│       └── chat.py                  # Chat endpoint
+│
+├── 📁 frontend/                     # Next.js frontend
+│   └── 📁 v0-compli-sense-app-build/
+│       ├── app/                     # Next.js App Router
+│       ├── components/              # React components
+│       ├── hooks/                   # Custom React hooks
+│       ├── lib/                     # Utilities & helpers
+│       ├── styles/                  # CSS/Tailwind
+│       ├── public/                  # Static assets
+│       ├── package.json
+│       └── tsconfig.json
+│
+├── 📄 main.py                       # Application entry point
+├── 📄 README.md                     # This file
+├── 📄 DOCUMENTATION.md              # Technical deep dive
+├── 📄 START_HERE.md                 # Quick navigation guide
+└── 📄 BACKEND_STRUCTURE.md          # Code organization details
 ```
-
----
-
-## 🔄 Data Flow Summary
-
-### Watchtower Data Flow
-```
-Change Detected → Gemini Analysis → ComplianceAlert → Database → Dashboard
-```
-
-### Executor Data Flow
-```
-User Click → Generate Report → crew.ai (3 agents) → GeneratedReport → Display
-```
-
-### Chat Data Flow
-```
-User Query → Vector Search → RAG Prompt → Gemini → Answer → Display
-```
-
----
-
-## 🔑 Key Features
-
-### ✅ Fully Functional Without API Keys
-- App runs perfectly in mock mode
-- Realistic hardcoded responses
-- No crashes or missing features
-- Great for development & testing
-
-### ✅ Three Independent Features
-- **Watchtower**: Background monitoring
-- **Executor**: On-demand AI analysis
-- **Reliable Chat**: Instant Q&A
-
-### ✅ Modular Architecture
-- `app/models/` - Database & API schemas
-- `app/routes/` - Endpoint definitions
-- `app/services/` - Business logic
-- `app/agents/` - AI agents
-- `app/config.py` - Configuration
-
-### ✅ Robust Error Handling
-- Database transaction safety
-- API fallback to mock
-- Schema validation on all inputs
-- Comprehensive logging
-
-### ✅ Production Ready
-- CORS configured for frontend
-- Pydantic validation
-- SQLAlchemy ORM
-- APScheduler background tasks
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Install Dependencies
+### Prerequisites
+- Python 3.9+
+- Node.js 18+
+- pip & npm/pnpm
+
+### Backend Setup
+
+1. **Clone & navigate to project:**
 ```bash
-pip install fastapi uvicorn sqlalchemy apscheduler google-generativeai crew-ai langchain-google-genai
+cd /path/to/btf-hackathon-submission
 ```
 
-### 2. Optional: Set API Key
+2. **Create virtual environment:**
 ```bash
-export GEMINI_API_KEY="your-api-key-here"
-# Skip this to run in mock mode
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-### 3. Start Server
+3. **Install dependencies:**
+```bash
+pip install fastapi uvicorn sqlalchemy pydantic crew-ai langchain-google-genai python-dotenv apscheduler
+```
+
+4. **Set up environment variables (optional):**
+```bash
+# Create .env file
+echo "GEMINI_API_KEY=your_api_key_here" > .env
+```
+
+5. **Run backend server:**
 ```bash
 python main.py
 ```
 
-### 4. Access Points
-- **API Docs**: http://localhost:8000/docs
-- **Health**: http://localhost:8000/health
-- **Frontend**: http://localhost:3000 (separate Next.js app)
+Backend runs at `http://localhost:8000`
+
+**API Documentation:** `http://localhost:8000/docs` (Swagger UI)
 
 ---
 
-## 📋 API Endpoints Summary
+### Frontend Setup
+
+1. **Navigate to frontend:**
+```bash
+cd frontend/v0-compli-sense-app-build
+```
+
+2. **Install dependencies:**
+```bash
+pnpm install  # or npm install
+```
+
+3. **Run development server:**
+```bash
+pnpm dev  # or npm run dev
+```
+
+Frontend runs at `http://localhost:3000`
+
+---
+
+## 📡 API Endpoints
 
 ### Authentication
-- `POST /api/v1/login` - Login (accepts any email/password)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/login` | User login (returns JWT token) |
 
 ### Alerts (Watchtower)
-- `GET /api/v1/alerts` - List all alerts
-- `GET /api/v1/alerts/{alert_id}` - Get specific alert
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/alerts` | List all compliance alerts |
+| GET | `/api/v1/alerts/{id}` | Get alert details |
 
 ### Reports (Executor)
-- `POST /api/v1/reports/generate?alert_id=X` - Generate report
-- `GET /api/v1/reports` - List all reports
-- `GET /api/v1/reports/{report_id}` - Get specific report
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/reports/generate` | Generate new report |
+| GET | `/api/v1/reports` | List all reports |
+| GET | `/api/v1/reports/{id}` | Get report details |
 
 ### Chat (Reliable Chat)
-- `POST /api/v1/chat` - Ask compliance question
-
-### System
-- `GET /health` - Health check
-- `GET /` - Root info
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/chat` | Ask compliance question |
 
 ---
 
-## 💾 Database Tables
+## 💾 Database Schema
 
-### Users
-- `id` (primary key)
-- `email` (unique)
-- `password_hash`
-- `created_at`
-
-### ComplianceAlerts
-- `id` (primary key)
-- `source` (e.g., "watchtower")
-- `summary` (alert text)
-- `impact_json` (analysis data)
-- `action_required` (boolean)
-- `created_at`
-
-### GeneratedReports
-- `id` (primary key)
-- `alert_id` (foreign key)
-- `status` ("in_progress", "completed", "failed")
-- `title`
-- `content_markdown` (full report text)
-- `created_at`
-
----
-
-## 🔍 Understanding the Features
-
-### Watchtower Details
-**Location**: `app/services/watchtower.py`
-**Trigger**: Automatic every 2 minutes
-**Process**: 
-1. Simulates web scrape
-2. Detects changes via even/odd minute
-3. Calls Gemini API for analysis
-4. Saves to database
-5. Frontend polls for new alerts
-
-**API Response**:
-```json
-{
-  "id": 1,
-  "source": "watchtower",
-  "summary": "SAMA updated guidelines...",
-  "impact_json": {
-    "impact": "High",
-    "actions": ["Review docs", "Update policies"]
-  },
-  "action_required": true,
-  "created_at": "2025-11-15T10:30:00"
-}
+### Users Table
+```sql
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY,
+    email VARCHAR UNIQUE NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
-### Executor Details
-**Location**: `app/routes/reports.py`, `app/agents/executor.py`
-**Trigger**: User clicks "Generate Report"
-**Process**:
-1. Create report in "in_progress" state
-2. Background task initializes crew.ai
-3. Three agents work in sequence
-4. Report content generated
-5. Database updated
-6. Frontend polls and displays
-
-**Report Status Lifecycle**:
-```
-Request → in_progress → completed/failed
-  ↓         ↓              ↓
-Created  Processing      Ready
+### ComplianceAlerts Table
+```sql
+CREATE TABLE compliance_alerts (
+    id INTEGER PRIMARY KEY,
+    alert_type VARCHAR NOT NULL,
+    description TEXT NOT NULL,
+    severity VARCHAR,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
-### Reliable Chat Details
-**Location**: `app/routes/chat.py`
-**Trigger**: User submits query
-**Process**:
-1. Search vector store for context
-2. Build RAG prompt with context
-3. Call Gemini API
-4. Return answer with source
-
-**Response Format**:
-```json
-{
-  "answer": "Full answer text from LLM...",
-  "source": "Compliance DB (Key: kyc)"
-}
+### GeneratedReports Table
+```sql
+CREATE TABLE generated_reports (
+    id INTEGER PRIMARY KEY,
+    title VARCHAR NOT NULL,
+    content TEXT,
+    status VARCHAR DEFAULT 'in_progress',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
 ---
 
-## 🎓 Learning Path
+## 🔑 Environment Variables
 
-### For Frontend Developers
-1. Read `APP_FLOW.md` - User flows section
-2. Read `DOCUMENTATION.md` - API Documentation
-3. Test endpoints in `/docs` (Swagger UI)
-4. Understand polling patterns for reports
+```env
+# Optional: Google Gemini API Key for LLM features
+GEMINI_API_KEY=your_api_key_here
+```
 
-### For Backend Developers
-1. Read `BACKEND_STRUCTURE.md` - Project structure
-2. Read `DOCUMENTATION.md` - Complete guide
-3. Review `app/` module organization
-4. Study error handling patterns
-
-### For Product Managers
-1. Read `APP_FLOW.md` - Complete user journey
-2. Review feature descriptions above
-3. Check `DOCUMENTATION.md` - Workflow diagrams
-4. Understand mock fallback strategy
-
-### For DevOps/Deployment
-1. Check dependencies in main.py
-2. Review `app/config.py` - Environment variables
-3. Database: SQLite (embedded)
-4. Scheduler: APScheduler (in-process)
-5. Environment: `export GEMINI_API_KEY="..."`
+**Note:** The application works with graceful degradation. If `GEMINI_API_KEY` is not set, mock responses are used for all AI features.
 
 ---
 
-## ❓ FAQ
+## 🔄 Core Workflows
 
-**Q: Do I need a Gemini API key?**
-A: No! The app works perfectly in mock mode without it. Set the key to enable real AI features.
+### User Sign-Up & Authentication
+```
+1. User opens frontend
+2. Enters email & password
+3. Frontend: POST /api/v1/login
+4. Backend: Returns JWT token
+5. Frontend: Stores token in localStorage
+6. User: Redirected to dashboard
+```
 
-**Q: How often does Watchtower check?**
-A: Every 2 minutes automatically in the background.
+### Alert Generation (Watchtower)
+```
+1. Backend scheduler runs every 2 minutes
+2. Checks for regulatory changes
+3. Generates ComplianceAlert records
+4. Frontend polls GET /api/v1/alerts
+5. New alerts appear on dashboard
+```
 
-**Q: How long does report generation take?**
-A: Typically 20-30 seconds, depends on crew.ai agent processing.
+### Report Generation (Executor)
+```
+1. User selects alert → clicks "Generate Report"
+2. Frontend: POST /api/v1/reports/generate?alert_id=X
+3. Backend: Creates report (status: in_progress)
+4. Background task: Crew agents analyze
+5. Frontend: Polls GET /api/v1/reports/{id}
+6. Report complete → displayed on dashboard
+```
 
-**Q: Is chat response persisted?**
-A: No, chat is real-time only. But you can implement persistence in the frontend.
-
-**Q: Can I add more alerts manually?**
-A: Yes, they're stored in SQLite. You can insert them directly or via an admin API.
-
-**Q: What's the difference between mock and real mode?**
-A: Real mode uses Gemini API for actual analysis. Mock mode returns hardcoded but realistic responses.
+### Chat Interaction (Reliable Chat)
+```
+1. User types compliance question
+2. Frontend: POST /api/v1/chat
+3. Backend: Searches vector store
+4. Gemini: Generates answer
+5. Frontend: Displays with source attribution
+```
 
 ---
 
-## 🔗 File Quick Links
+## 🛠️ Technology Stack
 
-| Document | Purpose | Read Time |
-|----------|---------|-----------|
-| `APP_FLOW.md` | User journeys & sign-up | 15 min |
-| `DOCUMENTATION.md` | Complete technical guide | 25 min |
-| `BACKEND_STRUCTURE.md` | Code organization | 10 min |
-| `main.py` | Entry point & server | 5 min |
+### Backend
+- **Framework:** FastAPI (Python web framework)
+- **Server:** Uvicorn (ASGI server)
+- **Database:** SQLite with SQLAlchemy ORM
+- **AI/ML:** Google Gemini API, crew.ai agents
+- **Task Scheduling:** APScheduler
+- **Validation:** Pydantic models
+- **Async:** asyncio, asynccontextmanager
+
+### Frontend
+- **Framework:** Next.js 14+ (React meta-framework)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **UI Components:** Custom React components
+- **HTTP Client:** Fetch API
+- **State Management:** React hooks
+
+### Infrastructure
+- **Containerization:** Docker (ready for deployment)
+- **API Format:** REST with JSON
+- **Authentication:** JWT tokens
+- **CORS:** Enabled for cross-origin requests
 
 ---
 
-## 🎉 You're Ready!
+## 🧪 Testing & Running
 
-You now have everything you need to:
-- ✅ Understand the complete user flow
-- ✅ Know how data moves through the system
-- ✅ Run and deploy the application
-- ✅ Develop frontend integrations
-- ✅ Extend with new features
+### Run Backend in Development
+```bash
+python main.py
+# Starts on http://localhost:8000
+# Watchtower scheduler: active (2-minute intervals)
+# Auto-reload: available with reload flag
+```
 
-Pick a document based on your role and dive in!
+### Run Frontend in Development
+```bash
+cd frontend/v0-compli-sense-app-build
+pnpm dev
+# Starts on http://localhost:3000
+# Hot reload: enabled
+```
 
+### Access API Documentation
+```
+http://localhost:8000/docs          # Swagger UI (interactive)
+http://localhost:8000/redoc         # ReDoc (alternative)
+```
+
+### Test API Endpoints
+```bash
+# Login
+curl -X POST http://localhost:8000/api/v1/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"user@example.com","password":"password"}'
+
+# Get alerts
+curl http://localhost:8000/api/v1/alerts
+
+# Generate report
+curl -X POST http://localhost:8000/api/v1/reports/generate?alert_id=1
+
+# Chat
+curl -X POST http://localhost:8000/api/v1/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message":"What is SOC 2 compliance?"}'
+```
+
+---
+
+## 📋 Key Implementation Details
+
+### Graceful Degradation
+- **With API Key:** Full AI-powered features using Google Gemini
+- **Without API Key:** Mock responses for all AI features
+- **No Crashes:** Application runs smoothly in both modes
+
+### Mock Features
+- Mock Watchtower alerts (4 compliance topics)
+- Mock vector store (4 compliance documents)
+- Mock crew.ai agent responses
+- Mock user authentication (no database validation)
+
+### Real Features
+- SQLite database creation & management
+- APScheduler for background tasks
+- FastAPI routing & middleware
+- Pydantic model validation
+- REST API with standard status codes
+
+---
+
+## 📚 Documentation
+
+Comprehensive documentation is included:
+
+| Document | Purpose |
+|----------|---------|
+| **README.md** (this file) | Project overview, setup, API reference |
+| **DOCUMENTATION.md** | Technical deep dive, workflows, diagrams |
+| **START_HERE.md** | Navigation guide, reading recommendations |
+| **BACKEND_STRUCTURE.md** | Code organization, file-by-file breakdown |
+
+---
+
+## 🎯 Features by Module
+
+### `app/routes/auth.py`
+- POST `/api/v1/login` - User authentication
+- Returns JWT token for session management
+
+### `app/routes/alerts.py`
+- GET `/api/v1/alerts` - List all alerts with pagination
+- GET `/api/v1/alerts/{id}` - Get single alert details
+- Integration with Watchtower service
+
+### `app/routes/reports.py`
+- POST `/api/v1/reports/generate` - Trigger report generation
+- GET `/api/v1/reports` - List all generated reports
+- GET `/api/v1/reports/{id}` - View report content
+- Background task execution via crew.ai
+
+### `app/routes/chat.py`
+- POST `/api/v1/chat` - Send compliance question
+- Vector store search with context matching
+- Gemini LLM integration for responses
+
+### `app/services/watchtower.py`
+- APScheduler integration (2-minute intervals)
+- Alert generation logic
+- Database persistence
+
+### `app/agents/executor.py`
+- Crew.ai agent definitions
+- Multi-agent report generation
+- Mock report fallback
+
+---
+
+## ✅ What's Working
+
+- ✅ User authentication via mock JWT
+- ✅ Watchtower scheduler (2-minute intervals)
+- ✅ Alert CRUD operations
+- ✅ Report generation (async background tasks)
+- ✅ Chat with context search
+- ✅ SQLite database auto-creation
+- ✅ CORS configuration for frontend
+- ✅ Graceful API key degradation
+- ✅ Pydantic validation
+- ✅ Swagger/ReDoc documentation
+
+---
+
+## 🔮 Future Enhancements
+
+- Real database validation for users
+- Enhanced vector store with actual compliance documents
+- Email notifications for alerts
+- Report export (PDF, CSV)
+- Advanced analytics dashboard
+- Multi-tenant support
+- Compliance rule customization
+- Integration with external APIs (regulations.gov, etc.)
+
+---
+
+## 📝 License
+
+This project is part of BTF Hackathon Submission 2025.
+
+---
+
+## 🤝 Support
+
+For questions about:
+- **Architecture** → See `DOCUMENTATION.md`
+- **User Flows** → See `APP_FLOW.md`
+- **Code Structure** → See `BACKEND_STRUCTURE.md`
+- **Getting Started** → See `START_HERE.md`
+
+---
+
+**Ready to get started?** Run `python main.py` and visit `http://localhost:8000/docs` 🚀
