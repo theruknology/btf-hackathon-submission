@@ -1,8 +1,8 @@
-# CompliOps - Compliance Automation Platform
+# CompliSense - Compliance Automation Platform
 
 > **AI-powered compliance monitoring, automated reporting, and intelligent Q&A for enterprises**
 
-CompliOps is a full-stack compliance automation platform combining **real-time monitoring**, **AI-driven report generation**, and **intelligent compliance guidance** to help organizations stay compliant with minimal manual effort.
+CompliSense is a full-stack compliance automation platform combining **real-time monitoring**, **AI-driven report generation**, and **intelligent compliance guidance** to help organizations stay compliant with minimal manual effort.
 
 ---
 
